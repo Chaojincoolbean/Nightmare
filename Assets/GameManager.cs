@@ -7,12 +7,16 @@ public class GameManager : MonoBehaviour {
 
 	public List<GameObject> Rats;
 	public GameObject rat;
+	public GameObject BloodSound;
 	public GameObject player;
+	public GameObject plane;
+	public GameObject BloodParticles;
 	public float speed;
 	private float x,y,t;
 	private float n;
 	public float time;
-	private int j= 0;
+	public float planespeed;
+
 
 
 
@@ -21,17 +25,16 @@ public class GameManager : MonoBehaviour {
 
 		rat = Resources.Load<GameObject> ("ratPrefab");
 		x = y = t= 0f;
-		n = -19f;
+		n = -7f;
 		time = 0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		j = j + 1;
-		if (j < 10000) {
-			MakeRats ();
-		}
+		MakeRats ();
+
+		Debug.Log (Time.time);
 
 		time = time + Time.deltaTime;
 
@@ -53,6 +56,27 @@ public class GameManager : MonoBehaviour {
 				//Debug.Log (n);
 				time = 0;
 			}
+		}
+
+		if (Time.time > 30f) {
+
+			BloodSound.SetActive (true);
+			BloodParticles.SetActive (true);
+
+			if (plane.transform.position.y <= 1f) {
+			
+				plane.transform.position = new Vector3 (0, (Time.time - 30f) * planespeed, 0);
+				BloodParticles.transform.position = new Vector3 (0, (Time.time - 30f) * planespeed, 0);
+
+				for (int i = 0; i < Rats.Count; i++) {
+					Rats [i].transform.position = new Vector3 (
+						Rats [i].transform.position.x,
+						(Time.time - 30f) * planespeed,
+						Rats [i].transform.position.z
+					);
+				}
+			}
+
 		}
 
 
